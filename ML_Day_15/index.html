@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tweet Sentiment Analyzer</title>
+  </head>
+  <body>
+    <h1>Tweet Sentiment Analyzer</h1>
+    <form action="/analyze" method="post">
+      <textarea
+        name="tweet"
+        rows="4"
+        cols="50"
+        placeholder="Enter your tweet"
+      ></textarea>
+      <br />
+      <input type="submit" value="Submit" />
+    </form>
+    <br />
+    <h2>Sentiment: <span id="sentiment-placeholder"></span></h2>
+
+    <script>
+      // Function to handle form submission
+      document.querySelector("form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var tweet = document.querySelector("textarea").value;
+
+        // Send the tweet data to the server for analysis
+        fetch("/analyze", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ tweet: tweet }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Display the sentiment in the placeholder
+            document.getElementById("sentiment-placeholder").textContent =
+              data.sentiment;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+    </script>
+  </body>
+</html>
