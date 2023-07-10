@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Outbreak Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url("https://cdn4.vectorstock.com/i/1000x1000/48/48/mosquito-cartoon-ready-for-eat-vector-1804848.jpg") no-repeat center center fixed;
+            background-size: 50%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            width: 400px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        h2#output {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+            background-color: peachpuff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Outbreak Prediction</h1>
+    <form method="POST" action="/predict">
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" placeholder="Enter city name" required><br><br>
+        <label for="positive">Positive:</label>
+        <input type="text" id="positive" name="pos" placeholder="Enter number of positive" required><br><br>
+        <label for="positive">PF:</label>
+        <input type="text" id="pf" name="pfinp" placeholder="Enter PF value" required><br><br>
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if prediction %}
+        <h2 id="output">Prediction: {{ prediction }}</h2>
+    {% endif %}
+</body>
+</html>
