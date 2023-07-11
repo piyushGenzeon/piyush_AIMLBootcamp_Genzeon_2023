@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RESULT</title>
+</head>
+<body>
+    <h1>Your Data</h1>
+    {% for feature, value in feature_values.items() %}
+        {{ feature }}:{{ value }}
+    {% endfor %}
+
+    {% if prediction == 1.0 %}
+        <p>The patient has chronic kidney disease.</p>
+    {% else %}
+        <p>The patient does not have chronic kidney disease.</p>
+    {% endif %}
+</body>
+</html>

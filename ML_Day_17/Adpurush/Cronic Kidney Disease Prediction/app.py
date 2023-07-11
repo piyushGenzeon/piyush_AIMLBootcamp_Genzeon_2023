@@ -1,8 +1,18 @@
+import pickle
 from flask import Flask, render_template, request
 import PyPDF2
 import pandas as pd
+import re
 
 app = Flask(__name__)
+
+# Load the scaler from the pickle file
+with open('scaler.pkl', 'rb') as file:
+    scaler = pickle.load(file)
+
+# Load the trained model from the pickle file
+with open('trained_model.pkl', 'rb') as file:
+    classifier = pickle.load(file)
 
 @app.route('/')
 def home():
@@ -15,23 +25,35 @@ def process():
 
     # Check if a file was uploaded
     if pdf_file:
-        # Read the PDF file and extract its text
+        # Load the PDF file
         pdf_reader = PyPDF2.PdfReader(pdf_file)
+
+        # extract its text
         text = ""
         for page in pdf_reader.pages:
             text += page.extract_text()
-        # Process the extracted text (e.g., pass it to the ML model for prediction)
 
-        # Return the extracted text as a response or perform further processing
+        # Pre-Process the extracted text (e.g., pass it to the ML model for prediction)
+        feature_values = []
+        pattern = r'(\w+)\s*=\s*([\d.]+)'
+        matches = re.findall(pattern, text)
+        for match in matches:
+            feature_name = match[0].lower()
+            feature_value = float(match[1])
+            feature_values[feature_name] = feature_value
 
-        return text
+        # Convert the feature values into a DataFrame
+        df = pd.DataFrame([feature_values])
 
-        # data = {'Text': [text]}
-        # df = pd.DataFrame(data)
+        # Apply feature scaling on the feature values
+        df_scaled = scaler.transform(df)
 
-        # # Return the dataframe as a response or perform further processing
-        #
-        # return df.to_html(index=False)
+        # Make predictions on the feature values
+        predictions = classifier.predict(df_scaled)
+
+        # Return the result template with the predictions and feature_values
+        return render_template('result.html', prediction=predictions[0], feature_values=feature_values)
+
     else:
         return "No file uploaded."
 
